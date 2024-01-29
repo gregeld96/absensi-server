@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LogMethod {
+  UPDATE
+  DELETE
+  CREATE
+}
+
+model Log {
+  id    String  @id
+  method  LogMethod?
+  oldData String? @map("old_data") @db.Text
+  newData String? @map("new_data") @db.Text
+  createdAt DateTime  @default(now()) @db.Timestamptz(3) @map("created_at")
+  createdBy String? @map("created_by")
+  updatedAt DateTime  @updatedAt @db.Timestamptz(3) @map("updated_at")
+
+  @@map("logs")
+}
